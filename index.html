@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Data</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px;
+    }
+
+    .container {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    thead {
+      background-color: #4a90e2;
+      color: white;
+    }
+
+    th,
+    td {
+      padding: 12px 16px;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+      background-color: #eef5ff;
+      transition: background-color 0.2s;
+    }
+
+    td b {
+      color: #222;
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 600px) {
+
+      th,
+      td {
+        padding: 10px 8px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Chat Data</h1>
+    <table id="data-table">
+      <thead>
+        <tr id="table-header"></tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    function formatText(text) {
+      return text.replace(/\n/g, '<br>');
+    }
+    async function loadData() {
+      const response = await fetch('https://theranordic.app.n8n.cloud/webhook/85c43856-2ae4-4d16-96c7-d4377fa6ff7c');
+      let data = await response.json();
+
+      // normalize if n8n wraps rows in { json: ... }
+      if (data.length && data[0].json) {
+        data = data.map(item => item.json);
+      }
+
+      if (data.length === 0) return;
+
+      const tbody = document.getElementById('table-body');
+      const headerRow = document.getElementById('table-header');
+      headerRow.innerHTML = '<th>Type</th><th>Message</th>';
+
+      for (let i = 0; i < data.length; i += 2) {
+        const row1 = data[i]?.message?.content ?? '';
+        const row2 = data[i + 1]?.message?.content ?? '';
+
+
+        // Question first (bold), then answer
+        const trQ = document.createElement('tr');
+        trQ.innerHTML = `<td>Question</td><td><b>${formatText(row2)}</b></td>`;
+        tbody.appendChild(trQ);
+
+        const trA = document.createElement('tr');
+        trA.innerHTML = `<td>Answer<br><br></td><td>${formatText(row1)}<br><br></td>`;
+        tbody.appendChild(trA);
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+
+</html>
