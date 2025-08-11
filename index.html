@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat Data</title>
+  <title>Chat History</title>
   <style>
     body {
       font-family: "Segoe UI", Tahoma, sans-serif;
@@ -22,12 +22,12 @@
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
     }
 
     h1 {
       text-align: center;
-      color: #333;
+      color: #4a90e2;
       margin-bottom: 20px;
     }
 
@@ -41,6 +41,7 @@
     thead {
       background-color: #4a90e2;
       color: white;
+      height: 30px;
     }
 
     th,
@@ -62,6 +63,23 @@
       color: #222;
     }
 
+    .top-right-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .top-right-btn:hover {
+      background-color: #0056b3;
+    }
+
+
     /* Responsive for mobile */
     @media (max-width: 600px) {
 
@@ -76,7 +94,9 @@
 
 <body>
   <div class="container">
-    <h1>Chat Data</h1>
+    <a href="https://autobizz.github.io/AI-Agent/" target="_blank" class="top-right-btn"> Ask AI</a>
+
+    <h1>Chat History</h1>
     <table id="data-table">
       <thead>
         <tr id="table-header"></tr>
@@ -102,7 +122,7 @@
 
       const tbody = document.getElementById('table-body');
       const headerRow = document.getElementById('table-header');
-      headerRow.innerHTML = '<th>Type</th><th>Message</th>';
+      headerRow.innerHTML = '<th></th>';
 
       for (let i = 0; i < data.length; i += 2) {
         const row1 = data[i]?.message?.content ?? '';
@@ -111,11 +131,11 @@
 
         // Question first (bold), then answer
         const trQ = document.createElement('tr');
-        trQ.innerHTML = `<td>Question</td><td><b>${formatText(row2)}</b></td>`;
+        trQ.innerHTML = `<td><b>${formatText(row2)}</b></td>`;
         tbody.appendChild(trQ);
 
         const trA = document.createElement('tr');
-        trA.innerHTML = `<td>Answer<br><br></td><td>${formatText(row1)}<br><br></td>`;
+        trA.innerHTML = `</td><td>${formatText(row1)}<br><br></td>`;
         tbody.appendChild(trA);
       }
     }
